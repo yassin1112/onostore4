@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>سلة التسوق - Ono Store</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="navbar">
+            <div class="nav-container">
+                <div class="logo">
+                    <i class="fas fa-paw"></i>
+                    <span>Ono Store</span>
+                </div>
+                <div class="nav-actions">
+                    <a href="index.html" class="back-btn">
+                        <i class="fas fa-arrow-left"></i>
+                        العودة للمتجر
+                    </a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Cart Section -->
+    <section class="checkout-section">
+        <div class="container">
+            <div class="checkout-content">
+                <div class="order-summary" style="width:100%">
+                    <div class="summary-header">
+                        <h2>سلة التسوق</h2>
+                        <span class="items-count">0 منتجات</span>
+                    </div>
+                    <div class="cart-items" id="cartItems"></div>
+                    <div class="order-totals">
+                        <div class="total-row final">
+                            <span>المجموع الكلي:</span>
+                            <span id="finalAmount">$0.00</span>
+                        </div>
+                    </div>
+                    <div class="cart-actions" style="margin-top:2rem;display:flex;justify-content:space-between;gap:1rem;">
+                        <button class="clear-cart" id="clearCartBtn">إفراغ السلة</button>
+                        <a href="#" class="checkout-btn" id="checkoutBtn">شراء الآن</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+    // تحميل السلة وعرضها
+    function loadCart() {
+        const savedCart = localStorage.getItem('cart');
+        let cart = savedCart ? JSON.parse(savedCart) : [];
+        const cartItemsContainer = document.getElementById('cartItems');
+        const finalAmountElement = document.getElementById('finalAmount');
+        const itemsCountElement = document.querySelector('.items-count');
+
+        if (cart.length === 0) {
+            cartItemsContainer.innerHTML = `<p style="text-align:center;color:#ccc;">السلة فارغة</p>`;
+            finalAmountElement.textContent = "$0.00";
+            itemsCountElement.textContent = "0 منتجات";
+            return;
+        }
+
+        // تجميع المنتجات حسب id
+        const grouped = {};
+        cart.forEach(item => {
+            if (grouped[item.id]) {
+                grouped[item.id].quantity += 1;
+            } else {
+                grouped[item.id] = {...item, quantity: 1};
+            }
+        });
+        const items = Object.values(grouped);
+        let total = 0;
+        const cartHTML = items.map(item => {
+            const price = typeof item.originalPrice === 'number' ? item.originalPrice : parseFloat(item.price);
+            const itemTotal = price * item.quantity;
+            total += itemTotal;
+            return `<div class='cart-item' data-id='${item.id}'>
+                <img src='${item.image || ''}' alt='${item.name}' style='width:60px;height:60px;border-radius:10px;'>
+                <div class='cart-item-info'>
+                    <h4>${item.name}</h4>
+                    <p>السعر: $${price.toFixed(2)}</p>
+                    <div class='quantity-controls'>
+                        <button class='quantity-btn minus' data-id='${item.id}'>-</button>
+                        <span class='quantity'>${item.quantity}</span>
+                        <button class='quantity-btn plus' data-id='${item.id}'>+</button>
+                    </div>
+                    <p class='item-total'>المجموع: $${itemTotal.toFixed(2)}</p>
+                </div>
+                <button class='remove-item' data-id='${item.id}'><i class='fas fa-trash'></i></button>
+            </div>`;
+        }).join('');
+        cartItemsContainer.innerHTML = cartHTML;
+        finalAmountElement.textContent = `$${total.toFixed(2)}`;
+        itemsCountElement.textContent = `${cart.length} منتجات`;
+    }
+
+    // تعديل الكمية أو حذف منتج
+    document.addEventListener('click', function(e) {
+        if (e.target.classList.contains('quantity-btn')) {
+            const id = parseInt(e.target.getAttribute('data-id'));
+            const savedCart = localStorage.getItem('cart');
+            let cart = savedCart ? JSON.parse(savedCart) : [];
+            if (e.target.classList.contains('plus')) {
+                // أضف نسخة جديدة
+                const item = cart.find(i => i.id === id);
+                cart.push(item);
+            } else if (e.target.classList.contains('minus')) {
+                // احذف نسخة واحدة فقط
+                const idx = cart.findIndex(i => i.id === id);
+                if (idx !== -1) cart.splice(idx, 1);
+            }
+            localStorage.setItem('cart', JSON.stringify(cart));
+            loadCart();
+        }
+        if (e.target.classList.contains('remove-item') || e.target.closest('.remove-item')) {
+            const btn = e.target.closest('.remove-item');
+            const id = parseInt(btn.getAttribute('data-id'));
+            let cart = localStorage.getItem('cart');
+            cart = cart ? JSON.parse(cart) : [];
+            cart = cart.filter(i => i.id !== id);
+            localStorage.setItem('cart', JSON.stringify(cart));
+            loadCart();
+        }
+        if (e.target.id === 'clearCartBtn') {
+            localStorage.removeItem('cart');
+            loadCart();
+        }
+    });
+
+    // تحميل السلة عند فتح الصفحة
+    document.addEventListener('DOMContentLoaded', loadCart);
+
+    // عند الضغط على زر شراء الآن، إذا السلة غير فارغة ينقل المستخدم للشيك آوت
+    const checkoutBtn = document.getElementById('checkoutBtn');
+    if (checkoutBtn) {
+        checkoutBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            const savedCart = localStorage.getItem('cart');
+            let cart = savedCart ? JSON.parse(savedCart) : [];
+            if (cart.length === 0) {
+                alert('السلة فارغة!');
+                return;
+            }
+            // السلة محفوظة أصلاً في localStorage، فقط انتقل للشيك آوت
+            window.location.href = 'checkout.html';
+        });
+    }
+    </script>
+</body>
+</html>

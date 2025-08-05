@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الرئيسية - متجر Ono</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="icon" type="image/png" href="https://imgur.com/kyGWrIO.png">
+</head>
+<body>
+    <!-- الهيدر -->
+    <header class="header">
+        <nav class="navbar">
+            <div class="nav-container">
+                <div class="logo">
+                    <img src="https://imgur.com/kyGWrIO.png" alt="شعار متجر Ono" class="circle-logo">
+                    <span class="logo-text">ONO store</span>
+                </div>
+                <div class="nav-menu">
+                    <a href="#home" class="nav-link">الرئيسية</a>
+                    <a href="#products" class="nav-link">المنتجات</a>
+                    <a href="#about" class="nav-link">من نحن</a>
+                    <a href="#contact" class="nav-link">تواصل معنا</a>
+                </div>
+                <div class="nav-actions">
+                    <button class="search-btn" id="searchBtn" aria-label="بحث"><i class="fas fa-search"></i></button>
+                    <button class="cart-btn" aria-label="سلة المشتريات"><i class="fas fa-shopping-cart"></i><span class="cart-count">0</span></button>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <!-- باقي الصفحة: البطل، المنتجات، من نحن، تواصل معنا، إلخ. -->
+    <!-- تأكد أن جميع النصوص بالعربية وأن كل الأزرار واضحة وسهلة الاستخدام -->
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <div class="hero-text">
+                <h1 class="hero-title">اكتشف عالم حيوانات Grow a Garden</h1>
+                <p class="hero-subtitle">تسوق أفضل الحيوانات في لعبة Roblox Grow a Garden</p>
+                <button class="cta-btn">تسوق الآن</button>
+            </div>
+        </div>
+    </section>
+
+
+
+    <!-- Products Section -->
+    <section class="products" id="products">
+        <div class="container">
+            <h2 class="section-title">حيوانات Grow a Garden</h2>
+            <p class="section-subtitle">اكتشف مجموعة رائعة من الحيوانات في لعبة Roblox Grow a Garden</p>
+            <div class="products-grid" id="productsGrid">
+                <!-- Products will be loaded dynamically -->
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="about" id="about">
+        <div class="container">
+            <h2 class="section-title">من نحن</h2>
+            <p class="section-subtitle">تعرف على متجرنا وخدماتنا المميزة</p>
+            <div class="about-content">
+                <div class="about-text">
+                    <p>نحن متجر متخصص في بيع حيوانات لعبة Roblox Grow a Garden. نقدم أفضل الحيوانات بأفضل الأسعار مع ضمان الجودة والسرعة في التوصيل.</p>
+                    <div class="features">
+                        <div class="feature">
+                            <i class="fas fa-shipping-fast"></i>
+                            <h4>توصيل سريع</h4>
+                            <p>نضمن وصول طلبك خلال 24 ساعة</p>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-shield-alt"></i>
+                            <h4>ضمان الجودة</h4>
+                            <p>جميع منتجاتنا مضمونة الجودة</p>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-headset"></i>
+                            <h4>دعم 24/7</h4>
+                            <p>فريق دعم متاح على مدار الساعة</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+
+    <!-- Contact Section -->
+    <section class="contact" id="contact">
+        <div class="container">
+            <h2 class="section-title">تواصل معنا</h2>
+            <div class="contact-content">
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <i class="fab fa-whatsapp"></i>
+                        <span>+216 95 238 717</span>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fab fa-instagram"></i>
+                        <a href="https://www.instagram.com/1onostore" target="_blank" class="social-link">
+                            <span>@onostore</span>
+                        </a>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fab fa-tiktok"></i>
+                        <a href="https://www.tiktok.com/@onostore0" target="_blank" class="social-link">
+                            <span>@ONOstore</span>
+                        </a>
+                    </div>
+                </div>
+                <div class="contact-form">
+                    <form action="https://formspree.io/f/movlkevb" method="POST">
+                        <label>
+                            بريدك الإلكتروني:
+                            <input type="email" name="email" required>
+                        </label>
+                        <label>
+                            رسالتك:
+                            <textarea name="message" required></textarea>
+                        </label>
+                        <button type="submit">إرسال</button>
+                    </form>
+                    <div id="form-success" style="display:none;color:green;margin-top:1rem;">تم إرسال رسالتك بنجاح!</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="footer-logo">
+                        <img src="https://imgur.com/kyGWrIO.png" alt="شعار متجر ONO" class="circle-logo">
+                        <span class="logo-text">ONO store</span>
+                    </div>
+                    <p>كل ما تحتاجه من حيوانات في لعبة Grow a Garden!</p>
+                </div>
+                <div class="footer-section">
+                    <h3>تواصل معنا</h3>
+                    <div class="social-links">
+                        <a href="https://wa.me/+21695238717" target="_blank" class="social-link">
+                            <i class="fab fa-whatsapp"></i>
+                        </a>
+                        <a href="https://www.instagram.com/1onostore" target="_blank" class="social-link">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="https://www.tiktok.com/@onostore0" target="_blank" class="social-link">
+                            <i class="fab fa-tiktok"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 ONO store. <span>جميع الحقوق محفوظة</span></p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="products.js"></script>
+    <script src="script.js"></script>
+    <script>
+document.querySelector('.contact-form form').addEventListener('submit', function(e) {
+  e.preventDefault();
+  var form = this;
+  var data = new FormData(form);
+  fetch(form.action, {
+    method: form.method,
+    body: data,
+    headers: {
+      'Accept': 'application/json'
+    }
+  }).then(response => {
+    if (response.ok) {
+      form.reset();
+      document.getElementById('form-success').style.display = 'block';
+    } else {
+      alert('حدث خطأ أثناء الإرسال. حاول مرة أخرى.');
+    }
+  }).catch(() => {
+    alert('حدث خطأ أثناء الإرسال. حاول مرة أخرى.');
+  });
+});
+</script>
+</body>
+</html> 

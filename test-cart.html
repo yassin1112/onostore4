@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اختبار السلة - Ono Store</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="navbar">
+            <div class="nav-container">
+                <div class="logo">
+                    <i class="fas fa-paw"></i>
+                    <span>Ono Store</span>
+                </div>
+                <div class="nav-actions">
+                    <button class="language-btn" id="languageBtn">
+                        <span class="current-lang">العربية</span>
+                        <i class="fas fa-globe"></i>
+                    </button>
+                    <button class="cart-btn">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="cart-count">0</span>
+                    </button>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Test Products Section -->
+    <section class="products" style="margin-top: 100px;">
+        <div class="container">
+            <h2 class="section-title" data-translate="products_title">حيوانات Grow a Garden</h2>
+            <p class="section-subtitle" data-translate="products_subtitle">اختبار السلة</p>
+            <div class="products-grid" id="productsGrid">
+                <!-- Test products will be loaded here -->
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Test products data
+        const testProducts = [
+            {
+                id: 1,
+                name: "كلب ألماني",
+                description: "كلب ألماني جميل وذكي",
+                price: 25.99,
+                image: "https://via.placeholder.com/300x200/7cb342/ffffff?text=German+Shepherd"
+            },
+            {
+                id: 2,
+                name: "قط فارسي",
+                description: "قط فارسي أنيق وهادئ",
+                price: 19.99,
+                image: "https://via.placeholder.com/300x200/3498db/ffffff?text=Persian+Cat"
+            },
+            {
+                id: 3,
+                name: "أرنب هولندي",
+                description: "أرنب هولندي لطيف ومحب",
+                price: 15.99,
+                image: "https://via.placeholder.com/300x200/e74c3c/ffffff?text=Dutch+Rabbit"
+            }
+        ];
+
+        // Load test products
+        function loadTestProducts() {
+            const productsGrid = document.getElementById('productsGrid');
+            const addToCartText = window.languageManager ? window.languageManager.getText('add_to_cart') : 'أضف للسلة';
+            
+            const productsHTML = testProducts.map(product => {
+                return `
+                    <div class="product-card" data-product-id="${product.id}">
+                        <div class="product-image">
+                            <img src="${product.image}" alt="${product.name}">
+                        </div>
+                        <div class="product-info">
+                            <h3>${product.name}</h3>
+                            <p>${product.description}</p>
+                            <div class="product-price">
+                                <span class="price">$${product.price.toFixed(2)}</span>
+                            </div>
+                            <button class="add-to-cart" data-product-id="${product.id}" data-translate="add_to_cart">${addToCartText}</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            productsGrid.innerHTML = productsHTML;
+        }
+
+        // Initialize when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load translations first
+            if (typeof LanguageManager !== 'undefined') {
+                window.languageManager = new LanguageManager();
+            }
+            
+            // Load test products
+            loadTestProducts();
+            
+            // Initialize cart functionality
+            initCartFunctionality();
+        });
+
+        // Simple cart functionality for testing
+        function initCartFunctionality() {
+            const cartBtn = document.querySelector('.cart-btn');
+            const addToCartBtns = document.querySelectorAll('.add-to-cart');
+            
+            // Update cart count
+            updateCartCount();
+
+            addToCartBtns.forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    const productId = parseInt(this.getAttribute('data-product-id'));
+                    const product = testProducts.find(p => p.id === productId);
+                    
+                    if (!product) return;
+                    
+                    // Get current cart
+                    const savedCart = localStorage.getItem('cart');
+                    let cart = savedCart ? JSON.parse(savedCart) : [];
+                    
+                    // Add to cart
+                    cart.push({
+                        id: product.id,
+                        name: product.name,
+                        price: product.price,
+                        image: product.image,
+                        originalPrice: product.price
+                    });
+                    
+                    // Save to localStorage
+                    localStorage.setItem('cart', JSON.stringify(cart));
+                    
+                    // Update cart count
+                    updateCartCount();
+                    
+                    // Show success message
+                    showNotification('تم إضافة المنتج للسلة بنجاح', 'success');
+                });
+            });
+
+            // Cart button click
+            if (cartBtn) {
+                cartBtn.addEventListener('click', () => {
+                    showCartModal();
+                });
+            }
+        }
+
+        function updateCartCount() {
+            const cartCount = document.querySelector('.cart-count');
+            if (cartCount) {
+                const savedCart = localStorage.getItem('cart');
+                const cart = savedCart ? JSON.parse(savedCart) : [];
+                cartCount.textContent = cart.length;
+            }
+        }
+
+        function showCartModal() {
+            const savedCart = localStorage.getItem('cart');
+            const cart = savedCart ? JSON.parse(savedCart) : [];
+            
+            if (cart.length === 0) {
+                showNotification('السلة فارغة', 'info');
+                return;
+            }
+
+            // Group items by ID and calculate quantities
+            const groupedCart = {};
+            cart.forEach(item => {
+                if (groupedCart[item.id]) {
+                    groupedCart[item.id].quantity += 1;
+                    const originalPrice = item.originalPrice || item.price;
+                    groupedCart[item.id].totalPrice = originalPrice * groupedCart[item.id].quantity;
+                } else {
+                    const originalPrice = item.originalPrice || item.price;
+                    groupedCart[item.id] = {
+                        ...item,
+                        quantity: 1,
+                        totalPrice: originalPrice
+                    };
+                }
+            });
+
+            // Calculate total
+            const total = Object.values(groupedCart).reduce((sum, item) => sum + item.totalPrice, 0);
+
+            // Create modal
+            const modal = document.createElement('div');
+            modal.className = 'cart-modal';
+            modal.innerHTML = `
+                <div class="cart-modal-content">
+                    <div class="cart-modal-header">
+                        <h3>السلة</h3>
+                        <button class="close-cart">&times;</button>
+                    </div>
+                    <div class="cart-items">
+                        ${Object.values(groupedCart).map((item, index) => `
+                            <div class="cart-item" data-id="${item.id}">
+                                <img src="${item.image}" alt="${item.name}">
+                                <div class="cart-item-info">
+                                    <h4>${item.name}</h4>
+                                    <p>السعر: $${item.originalPrice.toFixed(2)}</p>
+                                    <div class="quantity-controls">
+                                        <button class="quantity-btn minus" data-id="${item.id}">-</button>
+                                        <span class="quantity">${item.quantity}</span>
+                                        <button class="quantity-btn plus" data-id="${item.id}">+</button>
+                                    </div>
+                                    <p class="item-total">المجموع: $${item.totalPrice.toFixed(2)}</p>
+                                </div>
+                                <button class="remove-item" data-id="${item.id}">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <div class="cart-total">
+                        <h4>المجموع الكلي: $${total.toFixed(2)}</h4>
+                    </div>
+                    <div class="cart-actions">
+                        <button class="clear-cart">إفراغ السلة</button>
+                        <button class="checkout-btn">إتمام الطلب</button>
+                    </div>
+                </div>
+            `;
+
+            // Add to page
+            document.body.appendChild(modal);
+
+            // Close modal
+            const closeBtn = modal.querySelector('.close-cart');
+            closeBtn.addEventListener('click', () => {
+                modal.remove();
+            });
+
+            // Close on outside click
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.remove();
+                }
+            });
+
+            // Clear cart
+            const clearBtn = modal.querySelector('.clear-cart');
+            clearBtn.addEventListener('click', () => {
+                localStorage.removeItem('cart');
+                updateCartCount();
+                modal.remove();
+                showNotification('تم إفراغ السلة بنجاح', 'success');
+            });
+
+            // Checkout
+            const checkoutBtn = modal.querySelector('.checkout-btn');
+            checkoutBtn.addEventListener('click', () => {
+                modal.remove();
+                showNotification('سيتم توجيهك لصفحة الدفع', 'info');
+            });
+        }
+
+        function showNotification(message, type = 'info') {
+            // Remove existing notifications
+            const existingNotifications = document.querySelectorAll('.notification');
+            existingNotifications.forEach(notification => notification.remove());
+            
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.className = `notification notification-${type}`;
+            notification.innerHTML = `
+                <div class="notification-content">
+                    <span>${message}</span>
+                    <button class="notification-close">&times;</button>
+                </div>
+            `;
+            
+            // Add styles
+            notification.style.cssText = `
+                position: fixed;
+                top: 100px;
+                left: 20px;
+                background: ${type === 'success' ? '#7cb342' : type === 'error' ? '#e74c3c' : '#3498db'};
+                color: white;
+                padding: 1rem 1.5rem;
+                border-radius: 10px;
+                box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+                z-index: 10000;
+                transform: translateX(-400px);
+                transition: transform 0.3s ease;
+                max-width: 300px;
+            `;
+            
+            // RTL support (Arabic)
+            notification.style.right = 'auto';
+            notification.style.left = '20px';
+            notification.style.transform = 'translateX(-400px)';
+            
+            // Add to page
+            document.body.appendChild(notification);
+            
+            // Animate in
+            setTimeout(() => {
+                notification.style.transform = 'translateX(0)';
+            }, 100);
+            
+            // Close button functionality
+            const closeBtn = notification.querySelector('.notification-close');
+            closeBtn.addEventListener('click', () => {
+                notification.style.transform = 'translateX(-400px)';
+                setTimeout(() => notification.remove(), 300);
+            });
+            
+            // Auto remove after 5 seconds
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.style.transform = 'translateX(-400px)';
+                    setTimeout(() => notification.remove(), 300);
+                }
+            }, 5000);
+        }
+    </script>
+</body>
+</html> 

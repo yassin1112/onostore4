@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اختبار API Key - Ono Store</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .test-container {
+            background: white;
+            border-radius: 20px;
+            padding: 3rem;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            max-width: 600px;
+            width: 100%;
+        }
+
+        .test-title {
+            font-size: 2rem;
+            color: #2d5a27;
+            margin-bottom: 2rem;
+            font-weight: 700;
+        }
+
+        .api-info {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            text-align: left;
+        }
+
+        .api-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .api-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+
+        .api-label {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .api-value {
+            color: #7cb342;
+            font-weight: 600;
+            font-family: monospace;
+            background: #e8f5e8;
+            padding: 0.2rem 0.5rem;
+            border-radius: 5px;
+        }
+
+        .test-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+        }
+
+        .btn {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 25px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: #7cb342;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #689f38;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+        }
+
+        .test-result {
+            background: #e8f5e8;
+            border: 1px solid #7cb342;
+            border-radius: 10px;
+            padding: 1rem;
+            margin-top: 1rem;
+            text-align: left;
+        }
+
+        .test-result h4 {
+            color: #2d5a27;
+            margin-bottom: 0.5rem;
+        }
+
+        .test-result p {
+            color: #666;
+            margin: 0;
+            font-family: monospace;
+            word-break: break-all;
+        }
+
+        @media (max-width: 768px) {
+            .test-container {
+                padding: 2rem;
+            }
+            
+            .test-title {
+                font-size: 1.5rem;
+            }
+            
+            .test-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1 class="test-title">
+            <i class="fas fa-key"></i>
+            اختبار API Key
+        </h1>
+        
+        <div class="api-info">
+            <div class="api-item">
+                <span class="api-label">API Key:</span>
+                <span class="api-value" id="apiKey">ODEXOQ-MKHVEF-8YX2BQ-7TB4OG</span>
+            </div>
+            <div class="api-item">
+                <span class="api-label">Merchant ID:</span>
+                <span class="api-value" id="merchantId">15453928</span>
+            </div>
+            <div class="api-item">
+                <span class="api-label">Base URL:</span>
+                <span class="api-value" id="baseUrl">https://pay.oxapay.com</span>
+            </div>
+        </div>
+        
+        <div class="test-buttons">
+            <button class="btn btn-primary" onclick="testPayment(10.00)">
+                <i class="fas fa-dollar-sign"></i>
+                اختبار $10.00
+            </button>
+            <button class="btn btn-primary" onclick="testPayment(25.99)">
+                <i class="fas fa-dollar-sign"></i>
+                اختبار $25.99
+            </button>
+            <button class="btn btn-secondary" onclick="generateTestUrl()">
+                <i class="fas fa-link"></i>
+                إنشاء رابط تجريبي
+            </button>
+        </div>
+        
+        <div id="testResult" class="test-result" style="display: none;">
+            <h4><i class="fas fa-info-circle"></i> نتيجة الاختبار</h4>
+            <p id="resultText"></p>
+        </div>
+    </div>
+
+    <script>
+        // API Configuration
+        const API_KEY = "ODEXOQ-MKHVEF-8YX2BQ-7TB4OG";
+        const MERCHANT_ID = "15453928";
+        const BASE_URL = "https://pay.oxapay.com";
+
+        // Generate Order ID
+        function generateOrderId() {
+            return 'GAG' + Date.now() + Math.random().toString(36).substr(2, 5).toUpperCase();
+        }
+
+        // Create Oxxa Pay URL
+        function createOxxaPayUrl(amount, orderId) {
+            const amountInUSD = amount.toFixed(2);
+            const url = `${BASE_URL}/${MERCHANT_ID}?amount=${amountInUSD}&currency=USD&order_id=${orderId}&api_key=${API_KEY}`;
+            return url;
+        }
+
+        // Test Payment
+        function testPayment(amount) {
+            const orderId = generateOrderId();
+            const url = createOxxaPayUrl(amount, orderId);
+            
+            // Show result
+            const resultDiv = document.getElementById('testResult');
+            const resultText = document.getElementById('resultText');
+            
+            resultText.innerHTML = `
+                <strong>المبلغ:</strong> $${amount.toFixed(2)}<br>
+                <strong>رقم الطلب:</strong> ${orderId}<br>
+                <strong>الرابط:</strong> ${url}<br><br>
+                <strong>سيتم فتح الرابط في نافذة جديدة...</strong>
+            `;
+            
+            resultDiv.style.display = 'block';
+            
+            // Open URL in new window
+            setTimeout(() => {
+                window.open(url, '_blank');
+            }, 1000);
+        }
+
+        // Generate Test URL
+        function generateTestUrl() {
+            const orderId = generateOrderId();
+            const amount = 15.50;
+            const url = createOxxaPayUrl(amount, orderId);
+            
+            // Show result
+            const resultDiv = document.getElementById('testResult');
+            const resultText = document.getElementById('resultText');
+            
+            resultText.innerHTML = `
+                <strong>رابط تجريبي:</strong><br>
+                ${url}<br><br>
+                <strong>يمكنك نسخ هذا الرابط واختباره</strong>
+            `;
+            
+            resultDiv.style.display = 'block';
+        }
+
+        // Console logging for debugging
+        console.log('API Key:', API_KEY);
+        console.log('Merchant ID:', MERCHANT_ID);
+        console.log('Base URL:', BASE_URL);
+        
+        // Add global functions for console testing
+        window.testOxxaPay = function(amount = 10.00) {
+            const orderId = generateOrderId();
+            const url = createOxxaPayUrl(amount, orderId);
+            console.log('Oxxa Pay URL:', url);
+            window.open(url, '_blank');
+        };
+        
+        console.log('لاختبار في وحدة التحكم، اكتب: testOxxaPay(amount)');
+    </script>
+</body>
+</html> 

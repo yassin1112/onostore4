@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تم الدفع بنجاح - Ono Store</title>
+    <link rel="stylesheet" href="checkout-styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .success-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 20px;
+        }
+        
+        .success-card {
+            background: white;
+            border-radius: 20px;
+            padding: 3rem;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            max-width: 500px;
+            width: 100%;
+        }
+        
+        .success-icon {
+            font-size: 4rem;
+            color: #7cb342;
+            margin-bottom: 1rem;
+        }
+        
+        .success-title {
+            font-size: 2rem;
+            color: #2d5a27;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+        
+        .success-message {
+            color: #666;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+        
+        .order-details {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .order-detail {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .order-detail:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+        
+        .detail-label {
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .detail-value {
+            color: #7cb342;
+            font-weight: 600;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 25px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .btn-primary {
+            background: #7cb342;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #689f38;
+            transform: translateY(-2px);
+        }
+        
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+        }
+        
+        .whatsapp-note {
+            background: #e8f5e8;
+            border: 1px solid #7cb342;
+            border-radius: 10px;
+            padding: 1rem;
+            margin-top: 2rem;
+        }
+        
+        .whatsapp-note h4 {
+            color: #2d5a27;
+            margin-bottom: 0.5rem;
+        }
+        
+        .whatsapp-note p {
+            color: #666;
+            margin: 0;
+        }
+        
+        @media (max-width: 768px) {
+            .success-card {
+                padding: 2rem;
+            }
+            
+            .success-title {
+                font-size: 1.5rem;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="navbar">
+            <div class="nav-container">
+                <div class="logo">
+                    <i class="fas fa-paw"></i>
+                    <span>Ono Store</span>
+                </div>
+                <div class="nav-actions">
+                    <a href="index.html" class="back-btn">
+                        <i class="fas fa-arrow-left"></i>
+                        العودة للمتجر
+                    </a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Success Section -->
+    <section class="success-container">
+        <div class="success-card">
+            <div class="success-icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            
+            <h1 class="success-title">تم الدفع بنجاح! 🎉</h1>
+            
+            <p class="success-message">
+                شكراً لك على طلبك! تم إتمام الدفع بنجاح عبر Oxxa Pay.
+                سيتم التواصل معك قريباً لتسليم المنتجات.
+            </p>
+            
+            <div class="order-details" id="orderDetails">
+                <!-- Order details will be loaded here -->
+            </div>
+            
+            <div class="action-buttons">
+                <a href="index.html" class="btn btn-primary">
+                    <i class="fas fa-shopping-cart"></i>
+                    العودة للمتجر
+                </a>
+                <a href="https://wa.me/966501234567" target="_blank" class="btn btn-secondary">
+                    <i class="fab fa-whatsapp"></i>
+                    تواصل معنا
+                </a>
+            </div>
+            
+            <div class="whatsapp-note">
+                <h4><i class="fab fa-whatsapp"></i> ملاحظة مهمة</h4>
+                <p>
+                    سيتم التواصل معك عبر الواتساب خلال 24 ساعة لتسليم المنتجات.
+                    تأكد من أن رقم الواتساب صحيح.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <script src="discord-webhook.js"></script>
+    <script>
+        // DOM Content Loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            loadOrderDetails();
+            sendPaymentSuccessNotification();
+        });
+
+        // Load Order Details
+        function loadOrderDetails() {
+            const orderDetailsContainer = document.getElementById('orderDetails');
+            const currentOrder = localStorage.getItem('currentOrder');
+            
+            if (!currentOrder) {
+                orderDetailsContainer.innerHTML = `
+                    <div class="order-detail">
+                        <span class="detail-label">حالة الطلب:</span>
+                        <span class="detail-value">غير متوفر</span>
+                    </div>
+                `;
+                return;
+            }
+            
+            const order = JSON.parse(currentOrder);
+            
+            const orderHTML = `
+                <div class="order-detail">
+                    <span class="detail-label">رقم الطلب:</span>
+                    <span class="detail-value">${order.orderId}</span>
+                </div>
+                <div class="order-detail">
+                    <span class="detail-label">المبلغ المدفوع:</span>
+                    <span class="detail-value">$${order.total.toFixed(2)}</span>
+                </div>
+                <div class="order-detail">
+                    <span class="detail-label">اسم مستخدم Roblox:</span>
+                    <span class="detail-value">${order.user.robloxUsername}</span>
+                </div>
+                <div class="order-detail">
+                    <span class="detail-label">رقم الواتساب:</span>
+                    <span class="detail-value">${order.user.whatsappNumber}</span>
+                </div>
+                <div class="order-detail">
+                    <span class="detail-label">تاريخ الطلب:</span>
+                    <span class="detail-value">${new Date(order.timestamp).toLocaleDateString('ar-SA')}</span>
+                </div>
+                <div class="order-detail">
+                    <span class="detail-label">طريقة الدفع:</span>
+                    <span class="detail-value">Oxxa Pay</span>
+                </div>
+            `;
+            
+            orderDetailsContainer.innerHTML = orderHTML;
+        }
+
+        // Send Payment Success Notification
+        async function sendPaymentSuccessNotification() {
+            const currentOrder = localStorage.getItem('currentOrder');
+            
+            if (!currentOrder) {
+                console.log('لا يوجد طلب للتنبيه عنه');
+                return;
+            }
+            
+            const order = JSON.parse(currentOrder);
+            
+            try {
+                // Update order status
+                order.status = 'paid';
+                order.paymentDate = new Date().toISOString();
+                localStorage.setItem('currentOrder', JSON.stringify(order));
+                
+                // Send Discord notification
+                if (typeof sendPaymentSuccessNotification === 'function') {
+                    await sendPaymentSuccessNotification(order);
+                    console.log('تم إرسال إشعار نجاح الدفع للديسكورد');
+                } else {
+                    console.log('دالة إشعار الديسكورد غير متوفرة');
+                }
+                
+            } catch (error) {
+                console.error('خطأ في إرسال إشعار نجاح الدفع:', error);
+            }
+        }
+
+        // Auto redirect to store after 10 seconds
+        setTimeout(() => {
+            console.log('سيتم التوجيه للمتجر خلال 10 ثوان...');
+        }, 10000);
+
+        // Optional: Auto redirect after 30 seconds
+        setTimeout(() => {
+            if (confirm('هل تريد العودة للمتجر؟')) {
+                window.location.href = 'index.html';
+            }
+        }, 30000);
+    </script>
+</body>
+</html> 

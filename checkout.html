@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إتمام الطلب - Ono Store</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="icon" type="image/png" href="https://imgur.com/kyGWrIO.png">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="navbar">
+            <div class="nav-container">
+                <div class="logo">
+                    <img src="https://imgur.com/kyGWrIO.png" alt="شعار متجر Ono" class="circle-logo">
+                    <span>Ono Store</span>
+                </div>
+                <div class="nav-actions">
+                    <a href="index.html" class="back-btn">
+                        <i class="fas fa-arrow-left"></i>
+                        العودة للمتجر
+                    </a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <section class="checkout-section" style="padding: 5rem 0; min-height: 100vh; background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);">
+        <div class="container">
+            <div class="checkout-content" style="display: flex; flex-wrap: wrap; gap: 2rem; background: white; border-radius: 20px; box-shadow: 0 20px 60px rgba(0,0,0,0.1); padding: 2rem;">
+                <!-- Order Summary -->
+                <div class="order-summary" style="flex:1 1 400px; min-width:340px; background: #f8f9fa; border-radius: 20px; padding: 2rem; box-shadow: 0 4px 24px rgba(124,179,66,0.08);">
+                    <h2 class="section-title" style="margin-bottom:2rem;">ملخص الطلب</h2>
+                    <div id="orderProductsBox"></div>
+                    <div id="selectedProductImageBox" style="text-align:center;margin:1.5rem 0 0 0;"></div>
+                    <button id="clearCartBtn" class="cta-btn" style="background:#e74c3c;color:#fff;margin-bottom:1.5rem;">إفراغ السلة</button>
+                    <div class="order-total" style="background: #7cb342; color: #fff; font-size: 1.2rem; font-weight: 700; padding: 1rem; border-radius: 10px; text-align: center; margin-top: 1.5rem;">الإجمالي: <span id="orderTotal">$0.00</span></div>
+                </div>
+                <!-- Payment Info -->
+                <div class="payment-info" style="flex:1 1 400px; min-width:340px; background: #f8f9fa; border-radius: 20px; padding: 2rem;">
+                    <h2 class="section-title" style="margin-bottom:2rem;">معلومات الدفع</h2>
+                    <form id="checkoutForm">
+                        <div class="form-group">
+                            <label for="robloxUsername">اسم مستخدم Roblox *</label>
+                            <input type="text" id="robloxUsername" name="robloxUsername" required placeholder="اكتب اسم المستخدم الخاص بك">
+                        </div>
+                        <div class="form-group">
+                            <label for="whatsappNumber">رقم الواتساب *</label>
+                            <div style="display:flex;gap:0.5rem;align-items:center;">
+                                <select id="countryCode" name="countryCode" required style="padding:0.7rem 0.5rem;border-radius:10px;border:2px solid #e9ecef;font-size:1.08rem;max-width:110px;">
+                                    <option value="">كود الدولة</option>
+                                    <option value="966">🇸🇦 +966</option>
+                                    <option value="20">🇪🇬 +20</option>
+                                    <option value="212">🇲🇦 +212</option>
+                                    <option value="213">🇩🇿 +213</option>
+                                    <option value="216">🇹🇳 +216</option>
+                                    <option value="218">🇱🇾 +218</option>
+                                    <option value="249">🇸🇩 +249</option>
+                                    <option value="971">🇦🇪 +971</option>
+                                    <option value="962">🇯🇴 +962</option>
+                                    <option value="965">🇰🇼 +965</option>
+                                    <option value="964">🇮🇶 +964</option>
+                                    <option value="963">🇸🇾 +963</option>
+                                    <option value="968">🇴🇲 +968</option>
+                                    <option value="973">🇧🇭 +973</option>
+                                    <option value="974">🇶🇦 +974</option>
+                                    <option value="90">🇹🇷 +90</option>
+                                    <option value="44">🇬🇧 +44</option>
+                                    <option value="1">🇺🇸 +1</option>
+                                    <!-- أضف المزيد حسب الحاجة -->
+                                </select>
+                                <input type="tel" id="whatsappNumber" name="whatsappNumber" required placeholder="اكتب رقمك" pattern="[0-9]+" inputmode="numeric" maxlength="15" style="flex:1;opacity:0.7;">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="note">ملاحظة (اختياري)</label>
+                            <textarea id="note" name="note" placeholder="اكتب ملاحظتك هنا... اكتب طريقة تواصل معك إذا لم نتحصل عليك" rows="2" style="width:100%;padding:1rem;border-radius:12px;border:2px solid #e9ecef;font-size:1.08rem;"></textarea>
+                        </div>
+                        <button type="submit" class="cta-btn" style="width:100%;margin-top:1.5rem;">إتمام الطلب</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+    <script>
+    // جلب كل المنتجات من السلة وتجميع الكميات
+    function getCartProducts() {
+        const savedCart = localStorage.getItem('cart');
+        let cart = savedCart ? JSON.parse(savedCart) : [];
+        // دمج المنتجات المتكررة وتجميع الكمية
+        const grouped = {};
+        cart.forEach(item => {
+            if (grouped[item.id]) {
+                grouped[item.id].quantity += 1;
+            } else {
+                grouped[item.id] = {...item, quantity: 1};
+            }
+        });
+        return Object.values(grouped);
+    }
+    // عرض كل المنتجات في ملخص الطلب
+    function renderOrderProducts(products) {
+        const box = document.getElementById('orderProductsBox');
+        // إزالة الصورة من الأسفل
+        const imgBox = document.getElementById('selectedProductImageBox');
+        if (imgBox) imgBox.innerHTML = '';
+        if (!products.length) {
+            box.innerHTML = `<div style='color:#e74c3c;text-align:center;padding:2rem;'>لا يوجد منتجات في السلة<br><a href='index.html' style='color:#4a90e2;'>العودة للمتجر</a></div>`;
+            document.getElementById('orderTotal').textContent = '$0.00';
+            if (window.updateCartCount) window.updateCartCount();
+            return;
+        }
+        let total = 0;
+        box.innerHTML = products.map((item, idx) => {
+            const price = Number(item.price);
+            const itemTotal = price * item.quantity;
+            total += itemTotal;
+            // عرض الكمية بجانب كل منتج
+            return `<div class='product-box' style='display:flex;align-items:center;gap:1.2rem;margin-bottom:1.5rem;'>
+                <img src='${item.image || ''}' alt='${item.name}' style='width:90px;height:90px;border-radius:12px;border:2px solid #7cb342;background:#f8f9fa;object-fit:cover;box-shadow:0 2px 8px rgba(124,179,66,0.08);'>
+                <div class='product-details' style='flex:1;'>
+                    <h3 style='margin:0 0 0.3rem 0;font-size:1.18rem;font-weight:700;color:#2d5a27;'>${item.name}</h3>
+                    <p style='margin:0;color:#666;font-size:0.98rem;'>${item.description || ''}</p>
+                    <div style='color:#888;font-size:0.98rem;'>السعر: $${price.toFixed(2)}</div>
+                    <div style='color:#888;font-size:0.98rem;'>الكمية: ${item.quantity}</div>
+                </div>
+                <div style='font-weight:700;color:#7cb342;'>$${itemTotal.toFixed(2)}</div>
+            </div>`;
+        }).join('');
+        document.getElementById('orderTotal').textContent = `$${total.toFixed(2)}`;
+        if (window.updateCartCount) window.updateCartCount();
+    }
+    // تحديث الكمية لأي منتج
+    function updateProductQty(products, idx, delta) {
+        products[idx].quantity = Math.max(0, products[idx].quantity + delta);
+        if (products[idx].quantity === 0) {
+            products.splice(idx, 1);
+        }
+        // تحديث السلة في localStorage
+        let cart = [];
+        products.forEach(item => {
+            for (let i = 0; i < item.quantity; i++) {
+                cart.push({
+                    id: item.id,
+                    name: item.name,
+                    price: item.price,
+                    image: item.image,
+                    originalPrice: item.price,
+                    description: item.description
+                });
+            }
+        });
+        localStorage.setItem('cart', JSON.stringify(cart));
+        renderOrderProducts(products);
+        attachQtyListeners(products);
+        attachRemoveListeners(products);
+        // تحديث عداد السلة في الهيدر إذا كان موجود
+        if (window.updateCartCount) window.updateCartCount();
+    }
+    // ربط أزرار الكمية
+    function attachQtyListeners(products) {
+        document.querySelectorAll('.quantity-btn').forEach(btn => {
+            btn.onclick = function() {
+                const idx = Number(this.getAttribute('data-idx'));
+                const action = this.getAttribute('data-action');
+                updateProductQty(products, idx, action === 'plus' ? 1 : -1);
+            };
+        });
+    }
+    // حذف منتج واحد
+    function removeProduct(products, idx) {
+        products.splice(idx, 1);
+        // تحديث السلة في localStorage
+        let cart = [];
+        products.forEach(item => {
+            for (let i = 0; i < item.quantity; i++) {
+                cart.push({
+                    id: item.id,
+                    name: item.name,
+                    price: item.price,
+                    image: item.image,
+                    originalPrice: item.price,
+                    description: item.description
+                });
+            }
+        });
+        localStorage.setItem('cart', JSON.stringify(cart));
+        renderOrderProducts(products);
+        attachQtyListeners(products);
+        attachRemoveListeners(products);
+        // تحديث عداد السلة في الهيدر إذا كان موجود
+        if (window.updateCartCount) window.updateCartCount();
+    }
+    // ربط زر حذف منتج وزر إفراغ السلة
+    function attachRemoveListeners(products) {
+        document.querySelectorAll('.remove-item-btn').forEach(btn => {
+            btn.onclick = function() {
+                const idx = Number(this.getAttribute('data-idx'));
+                removeProduct(products, idx);
+            };
+        });
+        document.getElementById('clearCartBtn').onclick = function() {
+            localStorage.removeItem('cart');
+            products.length = 0;
+            renderOrderProducts(products);
+            attachQtyListeners(products);
+            attachRemoveListeners(products);
+            // تحديث عداد السلة في الهيدر إذا كان موجود
+            if (window.updateCartCount) window.updateCartCount();
+        };
+    }
+    // عند تحميل الصفحة
+    let products = getCartProducts();
+    document.addEventListener('DOMContentLoaded', function() {
+        renderOrderProducts(products);
+        attachQtyListeners(products);
+        attachRemoveListeners(products);
+    });
+
+    // Replace the old form submit logic with new OxPay redirect
+    if (document.getElementById('checkoutForm')) {
+        document.getElementById('checkoutForm').onsubmit = async function(e) {
+            e.preventDefault();
+            // Get latest cart from localStorage and group quantities
+            const savedCart = localStorage.getItem('cart');
+            let cart = savedCart ? JSON.parse(savedCart) : [];
+            const grouped = {};
+            cart.forEach(item => {
+                if (grouped[item.id]) {
+                    grouped[item.id].quantity += 1;
+                } else {
+                    grouped[item.id] = {...item, quantity: 1};
+                }
+            });
+            const products = Object.values(grouped);
+            if (!products.length) {
+                alert('السلة فارغة!');
+                return;
+            }
+            // Gather customer info
+            const robloxUsername = document.getElementById('robloxUsername').value;
+            const countryCode = document.getElementById('countryCode').value;
+            const whatsappNumber = document.getElementById('whatsappNumber').value;
+            const note = document.getElementById('note') ? document.getElementById('note').value : '';
+            let fullWhatsapp = whatsappNumber;
+            if (countryCode && whatsappNumber) {
+                fullWhatsapp = countryCode + whatsappNumber;
+            }
+            const customerInfo = { robloxUsername, whatsappNumber: fullWhatsapp, note };
+            // Send to backend (now using port 3002)
+            try {
+                const response = await fetch('http://localhost:3002/api/create-oxapay-link', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ cart: products, customerInfo })
+                });
+                const data = await response.json();
+                if (data.oxapayUrl) {
+                    window.location.href = data.oxapayUrl;
+                } else {
+                    alert('حدث خطأ في إنشاء رابط الدفع!');
+                }
+            } catch (err) {
+                alert('تعذر الاتصال بالخادم!');
+            }
+        };
+    }
+    </script>
+</body>
+</html> 
