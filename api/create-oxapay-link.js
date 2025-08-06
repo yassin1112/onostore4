@@ -14,10 +14,10 @@ const PRODUCTS_DB = {
   "10": { name: "disco Bee", price: 1 }
 };
 
-const apiKey = 'KT0VGL-TPV6O4-CM8O1F-THCZMQ';
+const apiKey = process.env.OXAPAY_API_KEY;
 
 export default async function handler(req, res) {
-  if (req.method !== 'POST' || req.url !== '/api/create-oxapay-link') {
+  if (req.method !== 'POST') {
     res.status(404).json({ error: 'Not found' });
     return;
   }
